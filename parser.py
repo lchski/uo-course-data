@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 htmlFilesDir = "pages/"
 htmlFiles = os.listdir(htmlFilesDir)
 
+dataFilesDir = "data/"
+
 files = []
 
 courses = []
@@ -27,14 +29,21 @@ for file in files:
         keysAndClasses = [
             ["code", "crsCode"],
             ["title", "crsTitle"],
-            ["description", "crsDesc"]
+            ["description", "crsDesc"],
+            ["restriction", "crsRestrict"]
         ]
 
         for keyAndClass in keysAndClasses:
-            courseData[keyAndClass[0]] = courseTable.find(class_=keyAndClass[1]).text
+            dataElement = courseTable.find(class_=keyAndClass[1])
+
+            if dataElement is not None:
+                courseData[keyAndClass[0]] = dataElement.text
+            else:
+                courseData[keyAndClass[0]] = ""
 
         disciplineCourses.append(courseData.copy())
 
     courses.append(disciplineCourses)
 
-print(json.dumps(courses, sort_keys=True, indent=4))
+    with open(dataFilesDir + file.replace(htmlFilesDir, "").replace(".html", "") + ".json", "w", encoding="utf8") as jsonFile:
+        json.dump(courses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)

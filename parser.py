@@ -43,6 +43,9 @@ for file in files:
             else:
                 courseData[keyAndClass[0]] = ""
 
+        courseData["year"] = courseData["code"][3]
+        courseData["language"] = "English" if 1 <= int(courseData["code"][4]) <= 4 else "French" if 5 <= int(courseData["code"][4]) <= 8 else "Bilingual/Unofficial/Unspecified"
+
         disciplineCourses.append(courseData.copy())
 
     courses[courseCode] = disciplineCourses

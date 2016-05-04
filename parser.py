@@ -1,4 +1,6 @@
 import os
+import json
+
 from bs4 import BeautifulSoup
 
 htmlFilesDir = "pages/"
@@ -13,6 +15,8 @@ for file in htmlFiles:
         files.append(htmlFilesDir + file)
 
 for file in files:
+    disciplineCourses = []
+
     soup = BeautifulSoup(open(file, "r"), "html.parser")
 
     courseTables = soup.find_all(name="table", id="crsBox")
@@ -23,13 +27,14 @@ for file in files:
         keysAndClasses = [
             ["code", "crsCode"],
             ["title", "crsTitle"],
-            ["description", "crsDesc"],
-            ["restriction", "crsRestrict"]
+            ["description", "crsDesc"]
         ]
 
         for keyAndClass in keysAndClasses:
-            courseData[keyAndClass[0]] = courseTable.find(class_=keyAndClass[1])
+            courseData[keyAndClass[0]] = courseTable.find(class_=keyAndClass[1]).text
 
-        courses.append(courseData.copy())
+        disciplineCourses.append(courseData.copy())
 
-print(courses)
+    courses.append(disciplineCourses)
+
+print(json.dumps(courses, sort_keys=True, indent=4))

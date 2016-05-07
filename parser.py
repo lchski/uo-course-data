@@ -19,7 +19,7 @@ for file in htmlFiles:
         files.append(htmlFilesDir + file)
 
 for file in files:
-    disciplineCourses = []
+    disciplineCourses = {}
 
     disciplineCode = file.replace(htmlFilesDir, "").replace(".html", "")
 
@@ -48,7 +48,7 @@ for file in files:
         courseData["year"] = courseData["code"][3]
         courseData["language"] = "English" if 1 <= int(courseData["code"][4]) <= 4 else "French" if 5 <= int(courseData["code"][4]) <= 8 else "Bilingual/Unofficial/Unspecified"
 
-        disciplineCourses.append(courseData.copy())
+        disciplineCourses[courseData["code"]] = courseData.copy()
 
     courses[disciplineCode] = disciplineCourses
 

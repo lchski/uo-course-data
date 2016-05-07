@@ -12,6 +12,8 @@ files = []
 
 courses = {}
 
+disciplines = []
+
 for file in htmlFiles:
     if ".html" in file:
         files.append(htmlFilesDir + file)
@@ -19,7 +21,7 @@ for file in htmlFiles:
 for file in files:
     disciplineCourses = []
 
-    courseCode = file.replace(htmlFilesDir, "").replace(".html", "")
+    disciplineCode = file.replace(htmlFilesDir, "").replace(".html", "")
 
     soup = BeautifulSoup(open(file, "r"), "html.parser")
 
@@ -48,10 +50,15 @@ for file in files:
 
         disciplineCourses.append(courseData.copy())
 
-    courses[courseCode] = disciplineCourses
+    courses[disciplineCode] = disciplineCourses
 
-    with open(dataFilesDir + courseCode + ".json", "w", encoding="utf8") as jsonFile:
+    disciplines.append(disciplineCode)
+
+    with open(dataFilesDir + disciplineCode + ".json", "w", encoding="utf8") as jsonFile:
         json.dump(disciplineCourses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
 
 with open(dataFilesDir + "data.json", "w", encoding="utf8") as jsonFile:
     json.dump(courses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
+
+with open(dataFilesDir + "disciplines.json", "w", encoding="utf8") as jsonFile:
+    json.dump(disciplines, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)

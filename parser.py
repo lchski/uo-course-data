@@ -23,7 +23,7 @@ for file in files:
 
     disciplineCode = file.replace(htmlFilesDir, "").replace(".html", "")
 
-    soup = BeautifulSoup(open(file, "r"), "html.parser")
+    soup = BeautifulSoup(open(file, "r", encoding="utf-8"), "html.parser")
 
     courseTables = soup.find_all(name="table", id="crsBox")
 

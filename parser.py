@@ -10,7 +10,7 @@ dataFilesDir = "data/"
 
 files = []
 
-courses = {}
+courses = []
 
 disciplines = []
 
@@ -50,7 +50,7 @@ for file in files:
 
         disciplineCourses.append(courseData.copy())
 
-    courses[disciplineCode] = disciplineCourses
+    courses.extend(disciplineCourses.copy())
 
     disciplines.append(disciplineCode)
 

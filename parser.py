@@ -17,14 +17,9 @@ disciplines = []
 
 class UoCourseListParser:
     def __init__(self, disciplineFile):
-        self.soup = BeautifulSoup(open(file, "r", encoding="utf-8"), "html.parser")
+        self.soup = BeautifulSoup(open(disciplineFile, "r", encoding="utf-8"), "html.parser")
 
-        self.code = None
-        self.year = None
-        self.language = None
-        self.title = None
-        self.description = None
-        self.extra_details = None
+        self.courses = None
 
         self.start_process()
 
@@ -51,6 +46,10 @@ class UoCourseSingleParser:
         self.extract_data(courseBlock)
 
     def extract_data(self, courseBlock):
+        self.description = self.extract_description(courseBlock)
+
+    def extract_description(self, courseBlock):
+        return courseBlock.find(class_="courseblockdesc").text
 
 
 for file in htmlFiles:
@@ -58,13 +57,9 @@ for file in htmlFiles:
         files.append(htmlFilesDir + file)
 
 for file in files:
-    disciplineCourses = []
-
     disciplineCode = file.replace(htmlFilesDir, "").replace(".html", "")
 
-    soup = BeautifulSoup(open(file, "r", encoding="utf-8"), "html.parser")
-
-    disciplineData = UoCourseListParser("IBM Canada Ltd.")
+    disciplineData = UoCourseListParser(file)
 
     for courseBlock in courseBlocks:
         courseData = {}
@@ -84,8 +79,8 @@ for file in files:
             else:
                 courseData[keyAndClass[0]] = ""
 
-        courseData["year"] = courseData["code"][3]
-        courseData["language"] = "English" if 1 <= int(courseData["code"][4]) <= 4 else "French" if 5 <= int(courseData["code"][4]) <= 8 else "Bilingual/Unofficial/Unspecified"
+        # courseData["year"] = courseData["code"][3]
+        # courseData["language"] = "English" if 1 <= int(courseData["code"][4]) <= 4 else "French" if 5 <= int(courseData["code"][4]) <= 8 else "Bilingual/Unofficial/Unspecified"
 
         disciplineCourses.append(courseData.copy())
 

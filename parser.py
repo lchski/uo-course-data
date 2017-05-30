@@ -14,6 +14,45 @@ courses = []
 
 disciplines = []
 
+
+class UoCourseListParser:
+    def __init__(self, disciplineFile):
+        self.soup = BeautifulSoup(open(file, "r", encoding="utf-8"), "html.parser")
+
+        self.code = None
+        self.year = None
+        self.language = None
+        self.title = None
+        self.description = None
+        self.extra_details = None
+
+        self.start_process()
+
+    def start_process(self):
+        courseBlocks = self.soup.find_all(name="div", class_="courseblock")
+
+        for courseBlock in courseBlocks:
+            courseData = UoCourseSingleParser(courseBlock)
+
+            print(courseData)
+
+
+ibm_data = UoCourseListParser("IBM Canada Ltd.")
+
+class UoCourseSingleParser:
+    def __init__(self, courseBlock):
+        self.code = None
+        self.year = None
+        self.language = None
+        self.title = None
+        self.description = None
+        self.extra_details = None
+
+        self.extract_data(courseBlock)
+
+    def extract_data(self, courseBlock):
+
+
 for file in htmlFiles:
     if ".html" in file:
         files.append(htmlFilesDir + file)
@@ -25,7 +64,7 @@ for file in files:
 
     soup = BeautifulSoup(open(file, "r", encoding="utf-8"), "html.parser")
 
-    courseBlocks = soup.find_all(name="div", class_="courseblock")
+    disciplineData = UoCourseListParser("IBM Canada Ltd.")
 
     for courseBlock in courseBlocks:
         courseData = {}

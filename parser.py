@@ -25,9 +25,9 @@ for file in files:
 
     soup = BeautifulSoup(open(file, "r", encoding="utf-8"), "html.parser")
 
-    courseTables = soup.find_all(name="table", id="crsBox")
+    courseBlocks = soup.find_all(name="div", class_="courseblock")
 
-    for courseTable in courseTables:
+    for courseBlock in courseBlocks:
         courseData = {}
 
         keysAndClasses = [
@@ -38,7 +38,7 @@ for file in files:
         ]
 
         for keyAndClass in keysAndClasses:
-            dataElement = courseTable.find(class_=keyAndClass[1])
+            dataElement = courseBlock.find(class_=keyAndClass[1])
 
             if dataElement is not None:
                 courseData[keyAndClass[0]] = dataElement.text

@@ -65,7 +65,12 @@ class UoCourseSingleParser:
         return "English" if 1 <= int(code[4]) <= 4 else "French" if 5 <= int(code[4]) <= 8 else "Bilingual/Unofficial/Unspecified"
 
     def extract_description(self, courseBlock):
-        return courseBlock.find(class_="courseblockdesc").text
+        descriptionElement = courseBlock.find(class_="courseblockdesc")
+
+        if descriptionElement is not None:
+            return descriptionElement.text
+        else:
+            return ''
 
 
 for file in htmlFiles:
@@ -77,25 +82,7 @@ for file in files:
 
     disciplineData = UoCourseListParser(file)
 
-    # for courseBlock in courseBlocks:
-    #     courseData = {}
-    #
-    #     keysAndClasses = [
-    #         ["code", "crsCode"],
-    #         ["title", "crsTitle"],
-    #         ["description", "crsDesc"],
-    #         ["restriction", "crsRestrict"]
-    #     ]
-    #
-    #     for keyAndClass in keysAndClasses:
-    #         dataElement = courseBlock.find(class_=keyAndClass[1])
-    #
-    #         if dataElement is not None:
-    #             courseData[keyAndClass[0]] = dataElement.text
-    #         else:
-    #             courseData[keyAndClass[0]] = ""
-    #
-    #     disciplineCourses.append(courseData.copy())
+    print(disciplineData.courses[0])
 
     courses.extend(disciplineData.courses.copy())
 

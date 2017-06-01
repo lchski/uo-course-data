@@ -19,7 +19,7 @@ class UoCourseListParser:
     def __init__(self, disciplineFile):
         self.soup = BeautifulSoup(open(disciplineFile, "r", encoding="utf-8"), "html.parser")
 
-        self.courses = None
+        self.courses = []
 
         self.start_process()
 
@@ -29,10 +29,15 @@ class UoCourseListParser:
         for courseBlock in courseBlocks:
             courseData = UoCourseSingleParser(courseBlock)
 
-            print(courseData)
+            self.courses.append({
+                'code': courseData.code,
+                'year': courseData.year,
+                'language': courseData.language,
+                'title': courseData.title,
+                'description': courseData.description,
+                'extraDetails': courseData.extra_details
+            })
 
-
-ibm_data = UoCourseListParser("IBM Canada Ltd.")
 
 class UoCourseSingleParser:
     def __init__(self, courseBlock):
@@ -46,7 +51,18 @@ class UoCourseSingleParser:
         self.extract_data(courseBlock)
 
     def extract_data(self, courseBlock):
+        self.code = 'POL1101'
+        self.year = self.extract_year_from_code(self.code)
+        self.language = self.extract_language_from_code(self.code)
+        self.title = 'title'
         self.description = self.extract_description(courseBlock)
+        self.extra_details = 'details'
+
+    def extract_year_from_code(self, code):
+        return int(code[3])
+
+    def extract_language_from_code(self, code):
+        return "English" if 1 <= int(code[4]) <= 4 else "French" if 5 <= int(code[4]) <= 8 else "Bilingual/Unofficial/Unspecified"
 
     def extract_description(self, courseBlock):
         return courseBlock.find(class_="courseblockdesc").text
@@ -61,38 +77,35 @@ for file in files:
 
     disciplineData = UoCourseListParser(file)
 
-    for courseBlock in courseBlocks:
-        courseData = {}
+    # for courseBlock in courseBlocks:
+    #     courseData = {}
+    #
+    #     keysAndClasses = [
+    #         ["code", "crsCode"],
+    #         ["title", "crsTitle"],
+    #         ["description", "crsDesc"],
+    #         ["restriction", "crsRestrict"]
+    #     ]
+    #
+    #     for keyAndClass in keysAndClasses:
+    #         dataElement = courseBlock.find(class_=keyAndClass[1])
+    #
+    #         if dataElement is not None:
+    #             courseData[keyAndClass[0]] = dataElement.text
+    #         else:
+    #             courseData[keyAndClass[0]] = ""
+    #
+    #     disciplineCourses.append(courseData.copy())
 
-        keysAndClasses = [
-            ["code", "crsCode"],
-            ["title", "crsTitle"],
-            ["description", "crsDesc"],
-            ["restriction", "crsRestrict"]
-        ]
-
-        for keyAndClass in keysAndClasses:
-            dataElement = courseBlock.find(class_=keyAndClass[1])
-
-            if dataElement is not None:
-                courseData[keyAndClass[0]] = dataElement.text
-            else:
-                courseData[keyAndClass[0]] = ""
-
-        # courseData["year"] = courseData["code"][3]
-        # courseData["language"] = "English" if 1 <= int(courseData["code"][4]) <= 4 else "French" if 5 <= int(courseData["code"][4]) <= 8 else "Bilingual/Unofficial/Unspecified"
-
-        disciplineCourses.append(courseData.copy())
-
-    courses.extend(disciplineCourses.copy())
+    courses.extend(disciplineData.courses.copy())
 
     disciplines.append(disciplineCode)
 
-    with open(dataFilesDir + disciplineCode + ".json", "w", encoding="utf8") as jsonFile:
-        json.dump(disciplineCourses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
-
-with open(dataFilesDir + "data.json", "w", encoding="utf8") as jsonFile:
-    json.dump(courses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
-
-with open(dataFilesDir + "disciplines.json", "w", encoding="utf8") as jsonFile:
-    json.dump(disciplines, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
+#     with open(dataFilesDir + disciplineCode + ".json", "w", encoding="utf8") as jsonFile:
+#         json.dump(disciplineCourses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
+#
+# with open(dataFilesDir + "data.json", "w", encoding="utf8") as jsonFile:
+#     json.dump(courses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
+#
+# with open(dataFilesDir + "disciplines.json", "w", encoding="utf8") as jsonFile:
+#     json.dump(disciplines, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)

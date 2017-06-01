@@ -64,7 +64,7 @@ class UoCourseSingleParser:
         self.language = self.extract_language_from_code(self.code)
         self.title = titleCredits.group(1).strip() if titleCredits is not None else ''
         self.description = self.extract_description(courseBlock)
-        self.extra_details = 'details'
+        self.extra_details = self.extract_extra_details(courseBlock)
 
     def extract_year_from_code(self, code):
         return int(code[4])
@@ -79,6 +79,15 @@ class UoCourseSingleParser:
             return descriptionElement.text.replace('\n', '').strip()
         else:
             return ''
+
+    def extract_extra_details(self, courseBlock):
+        details = []
+        detailElements = courseBlock.find_all(class_="courseblockextra")
+
+        for detail in detailElements:
+            details.append(detail.text)
+
+        return details
 
 
 for file in htmlFiles:

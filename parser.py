@@ -56,13 +56,13 @@ class UoCourseSingleParser:
     def extract_data(self, courseBlock):
         titleCodeCreditsElement = courseBlock.find(class_="courseblocktitle")
 
-        titleCreditsRegex = re.match(r"([a-zA-ZàâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒ ]*)\(([0-9])", titleCodeCreditsElement.text[9:])
+        titleCredits = re.match(r"([a-zA-ZàâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒ/ ]*)\(([0-9])", titleCodeCreditsElement.text[9:])
 
-        self.code = titleCodeCreditsElement.text[0:8]
-        self.credits = titleCreditsRegex.group(1)
+        self.code = titleCodeCreditsElement.text[0:8].replace(u'\xa0', ' ')
+        self.credits = int(titleCredits.group(2)) if titleCredits is not None else ''
         self.year = self.extract_year_from_code(self.code)
         self.language = self.extract_language_from_code(self.code)
-        self.title = titleCreditsRegex.group(0).strip()
+        self.title = titleCredits.group(1).strip() if titleCredits is not None else ''
         self.description = self.extract_description(courseBlock)
         self.extra_details = 'details'
 

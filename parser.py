@@ -1,5 +1,6 @@
 import os
 import json
+import re
 
 from bs4 import BeautifulSoup
 
@@ -55,11 +56,13 @@ class UoCourseSingleParser:
     def extract_data(self, courseBlock):
         titleCodeCreditsElement = courseBlock.find(class_="courseblocktitle")
 
+        titleCreditsRegex = re.match(r"([a-zA-ZàâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒ ]*)\(([0-9])", titleCodeCreditsElement.text[9:])
+
         self.code = titleCodeCreditsElement.text[0:8]
-        self.credits = 3
+        self.credits = titleCreditsRegex.group(1)
         self.year = self.extract_year_from_code(self.code)
         self.language = self.extract_language_from_code(self.code)
-        self.title = 'title'
+        self.title = titleCreditsRegex.group(0).strip()
         self.description = self.extract_description(courseBlock)
         self.extra_details = 'details'
 

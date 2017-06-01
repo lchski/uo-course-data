@@ -91,6 +91,10 @@ class UoCourseSingleParser:
         return details
 
 
+def output_json(fileName, data):
+    with open(dataFilesDir + fileName + ".json", "w", encoding="utf8") as jsonFile:
+        json.dump(data, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
+
 for file in htmlFiles:
     if ".html" in file:
         files.append(htmlFilesDir + file)
@@ -100,17 +104,13 @@ for file in files:
 
     disciplineData = UoCourseListParser(file)
 
-    print(disciplineData.courses[0])
-
     courses.extend(disciplineData.courses.copy())
 
     disciplines.append(disciplineCode)
 
-#     with open(dataFilesDir + disciplineCode + ".json", "w", encoding="utf8") as jsonFile:
-#         json.dump(disciplineCourses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
-#
-# with open(dataFilesDir + "data.json", "w", encoding="utf8") as jsonFile:
-#     json.dump(courses, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
-#
-# with open(dataFilesDir + "disciplines.json", "w", encoding="utf8") as jsonFile:
-#     json.dump(disciplines, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
+    output_json(disciplineCode, disciplineData.courses)
+
+
+output_json('data', courses)
+
+output_json('disciplines', disciplines)

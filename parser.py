@@ -31,6 +31,7 @@ class UoCourseListParser:
 
             self.courses.append({
                 'code': courseData.code,
+                'credits': courseData.credits,
                 'year': courseData.year,
                 'language': courseData.language,
                 'title': courseData.title,
@@ -42,6 +43,7 @@ class UoCourseListParser:
 class UoCourseSingleParser:
     def __init__(self, courseBlock):
         self.code = None
+        self.credits = None
         self.year = None
         self.language = None
         self.title = None
@@ -51,7 +53,10 @@ class UoCourseSingleParser:
         self.extract_data(courseBlock)
 
     def extract_data(self, courseBlock):
-        self.code = 'POL1101'
+        titleCodeCreditsElement = courseBlock.find(class_="courseblocktitle")
+
+        self.code = titleCodeCreditsElement.text[0:8]
+        self.credits = 3
         self.year = self.extract_year_from_code(self.code)
         self.language = self.extract_language_from_code(self.code)
         self.title = 'title'
@@ -59,16 +64,16 @@ class UoCourseSingleParser:
         self.extra_details = 'details'
 
     def extract_year_from_code(self, code):
-        return int(code[3])
+        return int(code[4])
 
     def extract_language_from_code(self, code):
-        return "English" if 1 <= int(code[4]) <= 4 else "French" if 5 <= int(code[4]) <= 8 else "Bilingual/Unofficial/Unspecified"
+        return "English" if 1 <= int(code[5]) <= 4 else "French" if 5 <= int(code[5]) <= 8 else "Bilingual/Unofficial/Unspecified"
 
     def extract_description(self, courseBlock):
         descriptionElement = courseBlock.find(class_="courseblockdesc")
 
         if descriptionElement is not None:
-            return descriptionElement.text
+            return descriptionElement.text.replace('\n', '').strip()
         else:
             return ''
 

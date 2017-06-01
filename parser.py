@@ -84,8 +84,9 @@ class UoCourseSingleParser:
         details = []
         detailElements = courseBlock.find_all(class_="courseblockextra")
 
-        for detail in detailElements:
-            details.append(detail.text)
+        if detailElements is not None:
+            for detail in detailElements:
+                details.append(detail.text)
 
         return details
 

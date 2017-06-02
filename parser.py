@@ -63,7 +63,7 @@ class UoCourseSingleParser:
         titleCredits = re.match(r"([a-zA-ZàâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒ0-9\-/'’.,:;?\(\) ]*)(?:\(|$)(?:([0-9]) (?:units|crédits))?", titleCodeCreditsElement.text[9:])
 
         self.code = titleCodeCreditsElement.text[0:8].replace(u'\xa0', ' ')
-        self.credits = int(titleCredits.group(2)) if titleCredits is not None and titleCredits.group(2) is not None else 0
+        self.credits = int(titleCredits.group(2)) if titleCredits is not None and titleCredits.group(2) is not None else 0 # if we have no credit count match, set to 0
         self.year = self.extract_year_from_code(self.code)
         self.language = self.extract_language_from_code(self.code)
         self.title = titleCredits.group(1).strip() if titleCredits is not None else ''

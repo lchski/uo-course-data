@@ -57,6 +57,9 @@ class UoCourseSingleParser:
         titleCodeCreditsElement = courseBlock.find(class_="courseblocktitle")
 
         # lol regex
+        # basically... match a bunch of characters (all the ones i found in titles); this is group #1
+        # then, check if we’re at the end of the string, or if there’s a credit count
+        # if there's a credit count ("units" or "crédits"), capture it; this is group #2
         titleCredits = re.match(r"([a-zA-ZàâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒ0-9\-/'’.,:;?\(\) ]*)(?:\(|$)(?:([0-9]) (?:units|crédits))?", titleCodeCreditsElement.text[9:])
 
         self.code = titleCodeCreditsElement.text[0:8].replace(u'\xa0', ' ')

@@ -56,6 +56,7 @@ class UoCourseSingleParser:
     def extract_data(self, courseBlock):
         titleCodeCreditsElement = courseBlock.find(class_="courseblocktitle")
 
+        # lol regex
         titleCredits = re.match(r"([a-zA-ZàâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒ0-9\-/'’.,:;?\(\) ]*)(?:\(|$)(?:([0-9]) (?:units|crédits))?", titleCodeCreditsElement.text[9:])
 
         self.code = titleCodeCreditsElement.text[0:8].replace(u'\xa0', ' ')

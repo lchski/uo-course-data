@@ -1,5 +1,6 @@
 import os
 import json
+import csv
 import re
 
 from bs4 import BeautifulSoup
@@ -99,6 +100,17 @@ def output_json(fileName, data):
     with open(dataFilesDir + fileName + ".json", "w", encoding="utf8") as jsonFile:
         json.dump(data, jsonFile, sort_keys=True, indent=4, ensure_ascii=False)
 
+def output_csv(fileName, data):
+    with open(dataFilesDir + fileName + ".csv", "w", encoding="utf8") as csvFile:
+        fields = ['code', 'credits', 'year', 'language', 'title', 'description', 'extraDetails']
+
+        writer = csv.DictWriter(csvFile, fieldnames=fields)
+
+        writer.writeheader()
+
+        for course in data:
+            writer.writerow(course)
+
 for file in htmlFiles:
     if ".html" in file:
         files.append(htmlFilesDir + file)
@@ -113,6 +125,8 @@ for file in files:
     disciplines.append(disciplineCode)
 
     output_json(disciplineCode, disciplineData.courses)
+
+    output_csv(disciplineCode, disciplineData.courses)
 
 
 output_json('data', courses)

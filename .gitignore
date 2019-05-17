@@ -1,3 +1,4 @@
 .idea/
-pages/*.html
+pages/**/*.html
 data/*.json
+data/*.csv
